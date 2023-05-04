@@ -15,15 +15,3 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
 
-  mail:
-    host: sandbox.smtp.mailtrap.io
-    port: 2525
-    username: 0d48e5d7ea7011
-    password: 8c6c6355a65e04
-    properties:
-      mail:
-        smtp:
-          starttls:
-            enable: true
-            required: true
-          auth: true

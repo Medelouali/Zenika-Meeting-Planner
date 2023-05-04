@@ -8,13 +8,13 @@ public class Meeting {
     // This would help us give priorities to meetings(FIFO)
     private long id;
     //The starting hour of the meeting for simplicity it's an int(Full Hours Only)
-    private int startAt;
+    private int startsAt;
     private MeetingType meetingType;
     private int numberOfPeople;
 
     public Meeting(int startAt, MeetingType meetingType, int numberOfPeople) {
         this.id=++generatedMeetings; //we'll go with 1 based indexing
-        this.startAt = startAt;
+        this.startsAt = startAt;
         this.meetingType = meetingType;
         this.numberOfPeople = numberOfPeople;
     }
@@ -43,12 +43,12 @@ public class Meeting {
         this.id = id;
     }
 
-    public int getStartAt() {
-        return startAt;
+    public int getStartsAt() {
+        return startsAt;
     }
 
-    public void setStartAt(int startAt) {
-        this.startAt = startAt;
+    public void setStartsAt(int startsAt) {
+        this.startsAt = startsAt;
     }
 
     public MeetingType getMeetingType() {
@@ -66,4 +66,5 @@ public class Meeting {
     public void setNumberOfPeople(int numberOfPeople) {
         this.numberOfPeople = numberOfPeople;
     }
+
 }
