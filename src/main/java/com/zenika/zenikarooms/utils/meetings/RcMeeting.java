@@ -1,15 +1,15 @@
-package com.zenika.zenikarooms.algorithms.consraintSatisfaction.meetings;
+package com.zenika.zenikarooms.utils.meetings;
 
-import com.zenika.zenikarooms.algorithms.consraintSatisfaction.tools.Tool;
+import com.zenika.zenikarooms.utils.tools.Tool;
 
 import java.util.ArrayList;
 
-public class VcMeeting implements MeetingType{
+public class RcMeeting implements MeetingType{
     private static ArrayList<Tool> mustHaveTools=new ArrayList<>();
     {
+        mustHaveTools.add(Tool.TABLEAU);
         mustHaveTools.add(Tool.ECRAN);
         mustHaveTools.add(Tool.PIEUVRE);
-        mustHaveTools.add(Tool.WEBCAM);
     }
 
     public ArrayList<Tool> getMustHaveTools() {

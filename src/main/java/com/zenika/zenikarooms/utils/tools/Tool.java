@@ -1,4 +1,5 @@
-package com.zenika.zenikarooms.algorithms.consraintSatisfaction.tools;
+package com.zenika.zenikarooms.utils.tools;
+
 
 public enum Tool {
     NEANT,

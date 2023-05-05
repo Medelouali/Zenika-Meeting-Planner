@@ -1,38 +1,31 @@
-package com.zenika.zenikarooms.algorithms.consraintSatisfaction.meetings;
+package com.zenika.zenikarooms.utils.meetings;
 
 // In the lingo of constraint Satisfaction algo, a meeting is variable
-public class Meeting {
-    private static int duration;
+public class MeetingWrapper {
     private static long generatedMeetings=0; // ids are generated automatically
     // Ids for meeting, if meeting A is reserved before B, in this case id(A)<id(b)
     // This would help us give priorities to meetings(FIFO)
     private long id;
     //The starting hour of the meeting for simplicity it's an int(Full Hours Only)
-    private int startsAt;
+    private int startingHour;
     private MeetingType meetingType;
     private int numberOfPeople;
 
-    public Meeting(int startAt, MeetingType meetingType, int numberOfPeople) {
+    public MeetingWrapper(int startAt, MeetingType meetingType, int numberOfPeople) {
         this.id=++generatedMeetings; //we'll go with 1 based indexing
-        this.startsAt = startAt;
+        this.startingHour = startAt;
         this.meetingType = meetingType;
         this.numberOfPeople = numberOfPeople;
     }
 
-    public static int getDuration() {
-        return duration;
-    }
 
-    public static void setDuration(int duration) {
-        Meeting.duration = duration;
-    }
 
     public static long getGeneratedMeetings() {
         return generatedMeetings;
     }
 
     public static void setGeneratedMeetings(long generatedMeetings) {
-        Meeting.generatedMeetings = generatedMeetings;
+        MeetingWrapper.generatedMeetings = generatedMeetings;
     }
 
     public long getId() {
@@ -43,12 +36,12 @@ public class Meeting {
         this.id = id;
     }
 
-    public int getStartsAt() {
-        return startsAt;
+    public int getStartingHour() {
+        return startingHour;
     }
 
-    public void setStartsAt(int startsAt) {
-        this.startsAt = startsAt;
+    public void setStartingHour(int startingHour) {
+        this.startingHour = startingHour;
     }
 
     public MeetingType getMeetingType() {

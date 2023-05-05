@@ -1,6 +1,6 @@
-package com.zenika.zenikarooms.algorithms.consraintSatisfaction.meetings;
+package com.zenika.zenikarooms.utils.meetings;
 
-import com.zenika.zenikarooms.algorithms.consraintSatisfaction.tools.Tool;
+import com.zenika.zenikarooms.utils.tools.Tool;
 
 import java.util.ArrayList;
 
