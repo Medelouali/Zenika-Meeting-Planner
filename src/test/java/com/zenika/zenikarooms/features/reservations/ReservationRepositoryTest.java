@@ -17,7 +17,7 @@ class ReservationRepositoryTest {
 
     // This test is to make sure the connection to the h2 memory is good
     @Test
-    void itShouldCheckReservationById(){
+    void itShouldVerifyRoomCapacity(){
         Room newRoom=Room.builder().
                 name("E1002")
                 .capacity(20)
