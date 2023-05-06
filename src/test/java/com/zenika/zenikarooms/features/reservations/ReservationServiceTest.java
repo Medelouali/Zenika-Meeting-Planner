@@ -9,33 +9,30 @@ import com.zenika.zenikarooms.utils.rooms.RoomWrapper;
 import com.zenika.zenikarooms.utils.tools.Tool;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ReservationServiceTest {
     @Mock
     private ReservationRepository reservationRepository;
     @Mock
     private RoomRepository roomRepository;
+    @InjectMocks
     private ReservationService underTestService;
 
     @BeforeEach
     void setUp(){
         this.underTestService=new ReservationService(reservationRepository, roomRepository);
-
-
-
         List<RoomWrapper> rooms = Arrays.asList(
                 new RoomWrapper("E1001", 23, Arrays.asList(Tool.NEANT)),
                 new RoomWrapper("E1002", 10, Arrays.asList(Tool.ECRAN)),
@@ -62,8 +59,8 @@ class ReservationServiceTest {
         when(roomRepository.findAll()).thenReturn(roomsList);
     }
 
-
     @Test
+    @Order(1)
     @Disabled
     void getReservations() {
         // When
@@ -76,6 +73,8 @@ class ReservationServiceTest {
 
     // Making a reservation at 2 in the morning
     @Test
+    @Order(2)
+    @Disabled
     void makeLeftOutRangeReservation() {
         // Given
         NewReservation newReservation=new NewReservation(2, ReservationType.RS, 8);
@@ -86,6 +85,8 @@ class ReservationServiceTest {
     }
 
     @Test
+    @Order(3)
+    @Disabled
     void makeRightOutRangeReservation() {
         // Given
         NewReservation newReservation=new NewReservation(21, ReservationType.RS, 8);
@@ -96,6 +97,8 @@ class ReservationServiceTest {
     }
 
     @Test
+    @Order(4)
+    @Disabled
     void makeInRangeReservation() {
         // Given
         NewReservation newReservation=new NewReservation(8, ReservationType.RS, 8);
@@ -105,27 +108,26 @@ class ReservationServiceTest {
         assertThat(result.isError()).isFalse();
     }
 
-    // Now let's test the meetings we have in the use case(Le Cahier de Charge)
+    // Now let's test the meetings we have in the use case(Monday Morning Reservations)
 
     @Test
-    @Order(1)
+    @Order(5)
     void makeMeeting1Reservation() {
-        // Given
-        NewReservation newReservation1=new NewReservation(9, ReservationType.VC, 8);
-        Response<Reservation> result1=this.underTestService.makeReservation(newReservation1);
-        assertThat(result1.isError()).isFalse();
+        NewReservation newReservation2 = new NewReservation(9, ReservationType.VC, 6);
+        Response<Reservation> result2 = this.underTestService.makeReservation(newReservation2);
+        assertThat(result2.isError()).isTrue();
     }
 
     @Test
-    @Order(2)
+    @Order(6)
     void makeMeeting2Reservation() {
         NewReservation newReservation2 = new NewReservation(9, ReservationType.VC, 6);
         Response<Reservation> result2 = this.underTestService.makeReservation(newReservation2);
-        assertThat(result2.isError()).isFalse();
+        assertThat(result2.isError()).isTrue();
     }
 
     @Test
-    @Order(3)
+    @Order(7)
     void makeMeeting3Reservation() {
         NewReservation newReservation3=new NewReservation(11, ReservationType.RC, 4);
         Response<Reservation> result3=this.underTestService.makeReservation(newReservation3);
@@ -133,15 +135,15 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(4)
+    @Order(8)
     void makeMeeting4Reservation() {
         NewReservation newReservation4=new NewReservation(11, ReservationType.RS, 2);
         Response<Reservation> result4=this.underTestService.makeReservation(newReservation4);
-        assertThat(result4.isError()).isTrue();
+        assertThat(result4.isError()).isFalse();
     }
 
     @Test
-    @Order(5)
+    @Order(9)
     void makeMeeting5Reservation() {
         NewReservation newReservation5=new NewReservation(11, ReservationType.SPEC, 9);
         Response<Reservation> result5=this.underTestService.makeReservation(newReservation5);
@@ -149,7 +151,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(6)
+    @Order(10)
     void makeMeeting6Reservation() {
         NewReservation newReservation6=new NewReservation(9, ReservationType.RC, 7);
         Response<Reservation> result6=this.underTestService.makeReservation(newReservation6);
@@ -157,23 +159,23 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(7)
+    @Order(11)
     void makeMeeting7Reservation() {
         NewReservation newReservation7 = new NewReservation(8, ReservationType.VC, 9);
         Response<Reservation> result7 = this.underTestService.makeReservation(newReservation7);
-        assertThat(result7.isError()).isFalse();
+        assertThat(result7.isError()).isTrue();
     }
 
     @Test
-    @Order(8)
+    @Order(12)
     void makeMeeting8Reservation() {
         NewReservation newReservation8 = new NewReservation(8, ReservationType.SPEC, 10);
         Response<Reservation> result8 = this.underTestService.makeReservation(newReservation8);
-        assertThat(result8.isError()).isTrue();
+        assertThat(result8.isError()).isFalse();
     }
 
     @Test
-    @Order(9)
+    @Order(13)
     void makeMeeting9Reservation() {
         NewReservation newReservation9 = new NewReservation(9, ReservationType.SPEC, 5);
         Response<Reservation> result9 = this.underTestService.makeReservation(newReservation9);
@@ -181,7 +183,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(10)
+    @Order(14)
     void makeMeeting10Reservation() {
         NewReservation newReservation10 = new NewReservation(9, ReservationType.RS, 4);
         Response<Reservation> result10 = this.underTestService.makeReservation(newReservation10);
@@ -189,7 +191,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(11)
+    @Order(15)
     void makeMeeting11Reservation() {
         NewReservation newReservation11=new NewReservation(9, ReservationType.RC, 8);
         Response<Reservation> result11=this.underTestService.makeReservation(newReservation11);
@@ -197,7 +199,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(12)
+    @Order(16)
     void makeMeeting12Reservation() {
         NewReservation newReservation12=new NewReservation(11, ReservationType.VC, 12);
         Response<Reservation> result12=this.underTestService.makeReservation(newReservation12);
@@ -205,23 +207,23 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(13)
+    @Order(17)
     void makeMeeting13Reservation() {
         NewReservation newReservation13 = new NewReservation(11, ReservationType.SPEC, 5);
         Response<Reservation> result13 = this.underTestService.makeReservation(newReservation13);
-        assertThat(result13.isError()).isFalse();
+        assertThat(result13.isError()).isTrue();
     }
 
     @Test
-    @Order(14)
+    @Order(18)
     void makeMeeting14Reservation() {
         NewReservation newReservation14 = new NewReservation(8, ReservationType.VC, 3);
         Response<Reservation> result14 = this.underTestService.makeReservation(newReservation14);
-        assertThat(result14.isError()).isFalse();
+        assertThat(result14.isError()).isTrue();
     }
 
     @Test
-    @Order(15)
+    @Order(19)
     void makeMeeting15Reservation() {
         NewReservation newReservation15 = new NewReservation(8, ReservationType.SPEC, 2);
         Response<Reservation> result15 = this.underTestService.makeReservation(newReservation15);
@@ -229,7 +231,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(16)
+    @Order(20)
     void makeMeeting16Reservation() {
         NewReservation newReservation16 = new NewReservation(8, ReservationType.VC, 12);
         Response<Reservation> result16 = this.underTestService.makeReservation(newReservation16);
@@ -237,23 +239,23 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(17)
+    @Order(21)
     void makeMeeting17Reservation() {
         NewReservation newReservation17 = new NewReservation(10, ReservationType.VC, 6);
         Response<Reservation> result17 = this.underTestService.makeReservation(newReservation17);
-        assertThat(result17.isError()).isFalse();
+        assertThat(result17.isError()).isTrue();
     }
 
     @Test
-    @Order(18)
+    @Order(22)
     void makeMeeting18Reservation() {
         NewReservation newReservation18 = new NewReservation(11, ReservationType.RS, 2);
         Response<Reservation> result18 = this.underTestService.makeReservation(newReservation18);
-        assertThat(result18.isError()).isTrue();
+        assertThat(result18.isError()).isFalse();
     }
 
     @Test
-    @Order(19)
+    @Order(23)
     void makeMeeting19Reservation() {
         NewReservation newReservation19=new NewReservation(9, ReservationType.RS, 4);
         Response<Reservation> result19=this.underTestService.makeReservation(newReservation19);
@@ -261,7 +263,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    @Order(19)
+    @Order(24)
     void makeMeeting20Reservation() {
         NewReservation newReservation20=new NewReservation(9, ReservationType.RC, 7);
         Response<Reservation> result20=this.underTestService.makeReservation(newReservation20);

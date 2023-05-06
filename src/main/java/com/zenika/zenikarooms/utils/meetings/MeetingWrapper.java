@@ -3,8 +3,6 @@ package com.zenika.zenikarooms.utils.meetings;
 // In the lingo of constraint Satisfaction algo, a meeting is variable
 public class MeetingWrapper {
     private static long generatedMeetings=0; // ids are generated automatically
-    // Ids for meeting, if meeting A is reserved before B, in this case id(A)<id(b)
-    // This would help us give priorities to meetings(FIFO)
     private long id;
     //The starting hour of the meeting for simplicity it's an int(Full Hours Only)
     private int startingHour;

@@ -9,25 +9,24 @@ import java.util.List;
 
 public class RoomWrapper {
     // In covid the room supports 70%(fullRation=0.7) of its real capacity
-    // but now that covid is over we could just change this ratio to 0.9(90%) or even 1(100%)
+    // but now that covid is over we may want to change this ratio to 0.9(90%) or even 1(100%)
     private static double fullRatio=0.7;
     // The room should be empty for one hour before its next use
     // the value of cleaningDuration is 0.5 because if we have 0.5h before and after a reservation
-    // we would have an hour between two consecutive reservations
+    // we would have a total of an hour between two consecutive reservations
     private static double cleaningDuration=0.5;
     // A meeting could happen only between 8h-20h
     private static int minReservationHour=8;
     private static int maxReservationHour=20;
+    // A meeting has a duration of 1h but in normal days(no covid) we may change this,
+    // the code would still work
     private static int reservationDuration=1;
     private static long generatedRooms=0; // ids are generated automatically
-    // Ids for meeting, if meeting A is reserved before B, in this case id(A)<id(b)
-    // This would help us give priorities to meetings(FIFO)
-    // See this in action in the method selectUnassignedVariable of the ConstraintSatisfaction class
     private long id;
     private String name;
     private int realCapacity;
     List<Tool> availableTools;
-    List<MeetingWrapper> reservations;
+    List<MeetingWrapper> reservations=new ArrayList<>();
 
     public RoomWrapper(String name, int realCapacity, List<Tool> availableTools) {
         this.name = name;
@@ -49,12 +48,13 @@ public class RoomWrapper {
     }
 
     // Check if we can assign a room to a meeting or not
-    // This method is private to demonstrate encapsulation
-    private boolean isAssignableToMeeting(MeetingWrapper meeting){
+    // This method should be private to demonstrate encapsulation but for the tests it's public
+    public boolean isAssignableToMeeting(MeetingWrapper meeting){
         boolean isAssignable=meeting.getNumberOfPeople()<=(fullRatio*this.realCapacity);
         if(isAssignable){
             if(meeting.getMeetingType().getMustHaveTools().isEmpty()){
-                return meeting.getNumberOfPeople() >= 3;
+                // RS meeting requires a room with 4 ou more people
+                return fullRatio*this.realCapacity >= 4;
             }
             boolean allIn=true;
             for(Tool tool: meeting.getMeetingType().getMustHaveTools()){
@@ -75,15 +75,17 @@ public class RoomWrapper {
         int meetingDuration= RoomWrapper.reservationDuration;
         // If the room does not have the required tools then we can't make a reservation
         if(!this.isAssignableToMeeting(meeting)) return false;
-        // Making sure the timeframe is right
+        // Making sure the reservation is within the right range of working hours
+        // [8h(minReservationHour)-20h(maxReservationHour)]
         if(meeting.getStartingHour() < minReservationHour || meetingDuration+meeting.getStartingHour() > maxReservationHour) return false;
+        // Making sure the timeframe is compatible with the already reserved meetings in the current room
         for(MeetingWrapper r: this.reservations){
             // Edge cases:
             if(r.getStartingHour()==minReservationHour &&
                     meeting.getStartingHour()<minReservationHour+meetingDuration+cleaningDuration)return false;
             if(r.getStartingHour()+meetingDuration==maxReservationHour &&
                     meeting.getStartingHour()+meetingDuration>r.getStartingHour()-cleaningDuration)return false;
-            // Inner hours i.e: 9->19
+            // Inner hours i.e: 9h->19h
             boolean isNoOverlap=(
                     meeting.getStartingHour()+meetingDuration < r.getStartingHour()-cleaningDuration ||
                             meeting.getStartingHour() >  r.getStartingHour()+meetingDuration+cleaningDuration
@@ -93,6 +95,10 @@ public class RoomWrapper {
             // we'll leave at that
         }
         return true;
+    }
+
+    public void addReservation(MeetingWrapper meetingWrapper){
+        this.reservations.add(meetingWrapper);
     }
 
     public long getId() {
@@ -133,5 +139,13 @@ public class RoomWrapper {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static double getFullRatio() {
+        return fullRatio;
+    }
+
+    public static void setFullRatio(double fullRatio) {
+        RoomWrapper.fullRatio = fullRatio;
     }
 }

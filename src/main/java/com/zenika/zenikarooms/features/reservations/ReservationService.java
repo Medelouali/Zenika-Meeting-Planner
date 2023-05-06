@@ -49,17 +49,23 @@ public class ReservationService {
         reservationRepository.save(reservation);
         return new Response<>(
                 false,
-                "Your reservation for room "+room.getName()+" has been registered successfully, we are waiting for you;)",
+                "Your reservation for room " + room.getName() +
+                        " has been registered successfully, we are waiting for you;)",
                 null
         );
     }
 
+    // To find the appropriate room we gotta minimize the gap between the actual number of people in a meeting
+    // of the type X(VC, SPEC, RS, RC) and the real capacity of the room that supports that exact meeting type
     private Room findAppropriateRoom(NewReservation reservation){
+        Room minGapRoom=null;
+        int gap=Integer.MAX_VALUE;
+
         List<Room> rooms=this.roomRepository.findAll();
         List<Reservation> reservations=this.reservationRepository.findAll();
         for (Room room: rooms) {
             List<MeetingWrapper> currentReservations=new ArrayList<>();
-            // Check if the room has enough capacity
+            // Get the already made reservations for the current room
             for(Reservation r: reservations){
                 if(r.getRoom().getId()==room.getId()){
                     currentReservations.add(new MeetingWrapper(r.getStartingHour(),
@@ -67,15 +73,24 @@ public class ReservationService {
                             r.getNumberOfPeople()));
                 }
             }
-            RoomWrapper roomWrapper=new RoomWrapper(room.getCapacity(), room.getAvailableTools(), currentReservations);
-            // The core login happens inside the canMakeReservation method
+            RoomWrapper roomWrapper=new RoomWrapper(room.getCapacity(),
+                    room.getAvailableTools(), currentReservations);
+            // The core login happens inside the canMakeReservation method in RoomWrapper class
             if(
                     roomWrapper.canMakeReservation(
                             new MeetingWrapper(reservation.getStartingHour(),
-                                    MeetingTypeBuilder.getMeetingTypeFromReservationType(reservation.getReservationType()),
+                                    MeetingTypeBuilder.getMeetingTypeFromReservationType(
+                                            reservation.getReservationType()
+                                    ),
                                     reservation.getNumOfPeople()))
-            )return room;
+            ){
+                int newGap=(int)(RoomWrapper.getFullRatio()*room.getCapacity()) - reservation.getNumOfPeople();
+                if(gap>newGap){
+                    gap=newGap;
+                    minGapRoom=room;
+                }
+            };
         }
-        return null;
+        return minGapRoom;
     }
 }
