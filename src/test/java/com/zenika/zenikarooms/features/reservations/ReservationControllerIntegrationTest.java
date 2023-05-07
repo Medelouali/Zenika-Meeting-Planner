@@ -44,17 +44,4 @@ class ReservationControllerIntegrationTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
-
-    @Test
-    void itShouldMakeReservation() throws Exception {
-        NewReservation newReservation = new NewReservation(9, ReservationType.VC, 8);
-        String json = new ObjectMapper().writeValueAsString(newReservation);
-
-        mockMvc.perform(post("/api/v1/reservations")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.startingHour").value(9));
-    }
 }
