@@ -35,8 +35,7 @@ public class ReservationService {
         if(room==null)return new Response<>(
                 true,
                 "We are booked right now for "+newReservation.getReservationType()
-                        +" meetings and we are totally sorry try with another type (RS, RC, SPEC or VC)",
-                null
+                        +" meetings and we are totally sorry try with another type (RS, RC, SPEC or VC)"
         );
         // And here make the reservation
         Reservation reservation = Reservation.builder()
@@ -48,7 +47,6 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
         return new Response<>(
-                false,
                 "Your reservation for room " + room.getName() +
                         " has been registered successfully, we are waiting for you;)",
                 reservation

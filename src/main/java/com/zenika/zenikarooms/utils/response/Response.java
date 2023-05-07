@@ -19,6 +19,17 @@ public class Response<T> {
         this.error=false;
     }
 
+    public Response(String message, T data) {
+        this.message = message;
+        this.data = data;
+        this.error=false;
+    }
+
+    public Response(boolean error, String message) {
+        this.error = error;
+        this.message = message;
+        this.data=null;
+    }
 
     public boolean isError() {
         return error;
