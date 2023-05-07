@@ -11,12 +11,12 @@ class ZenikaRoomsPlannerTests {
 	@Test
 	void itShouldAddTwoNumbers() {
 		// Given
-		int num1=10;
+		int num1=20;
 		int num2=20;
 		// When
 		int result=underTest.add(num1, num2);
 		// Then
-		int expected=30;
+		int expected=40;
 		assertThat(result).isEqualTo(expected);
 	}
 
