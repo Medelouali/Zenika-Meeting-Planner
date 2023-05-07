@@ -13,6 +13,13 @@ public class Response<T> {
         this.data = data;
     }
 
+    public Response(T data) {
+        this.data = data;
+        this.message="";
+        this.error=false;
+    }
+
+
     public boolean isError() {
         return error;
     }

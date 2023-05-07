@@ -51,7 +51,7 @@ public class ReservationService {
                 false,
                 "Your reservation for room " + room.getName() +
                         " has been registered successfully, we are waiting for you;)",
-                null
+                reservation
         );
     }
 
