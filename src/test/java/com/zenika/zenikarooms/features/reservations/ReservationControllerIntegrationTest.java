@@ -35,7 +35,7 @@ class ReservationControllerIntegrationTest {
 
     @Test
     void itShouldCheckIfTheEndpointIsAccessible() throws Exception {
-        NewReservation newReservation = new NewReservation(9, ReservationType.VC, 8);
+        NewReservation newReservation = new NewReservation(8, ReservationType.VC, 8);
         String json = new ObjectMapper().writeValueAsString(newReservation);
 
         mockMvc.perform(post("/api/v1/reservations")
