@@ -108,4 +108,4 @@ You should get something like:
 To get the rooms you have already generated or to just check hit this endpoint:
 Get http://localhost:8080/api/v1/rooms
 
-To help you with the tests check the image in the top folder.
+To help you with the tests check the image in the top level of this repo.
